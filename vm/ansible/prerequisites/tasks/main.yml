@@ -81,15 +81,6 @@
 #     kind delete cluster
 #     exit 0
 
-- name: Install pumba
-  shell: |
-    curl -Lo ./pumba "https://github.com/alexei-led/pumba/releases/download/0.6.8/pumba_linux_amd64"
-    chmod +x ./pumba
-    sudo mv ./pumba /usr/bin/pumba
-    exit 0
-  args:
-    creates: /usr/bin/pumba
-
 - name: Pre-pull some images into docker
   shell: |
     docker pull {{ item }}
@@ -178,13 +169,6 @@
     FLUSH PRIVILEGES;
     quit
     EOF
-
-- name: Make sure mysql database listens on all interfaces
-  become: true
-  lineinfile:
-    path: /lib/systemd/system/mysql.service
-    regexp: '^ExecStart='
-    line: 'ExecStart=/usr/sbin/mysqld --daemonize --pid-file=/run/mysqld/mysqld.pid --bind-address=0.0.0.0 --port=3306'
 
 # Stop services from starting on boot time
 - name: Disable auto-boot services
